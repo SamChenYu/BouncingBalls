@@ -7,19 +7,21 @@ import java.util.Random;
 
 public class Ball {
     
+    // Driver Variables
+    
     Random r = new Random();
     int screenWidth, screenHeight;
+    Color color;
+    
+    // Oval Variables
     
     int radius;
     int x;
     int y;
-    double initialY;
+    
+    // Update Variables
+    
     boolean falling = true;
-    boolean parabolaArc = false;
-    int continousFallingAccelerator = 0;
-    
-    Color color;
-    
     double velocity;
     
     
@@ -30,7 +32,6 @@ public class Ball {
         
         this.x = x;
         this.y = y;
-        this.initialY = (double) y;
         
         int red = r.nextInt(256);   // Generates a random value between 0 and 255
         int green = r.nextInt(256);
@@ -46,17 +47,13 @@ public class Ball {
         
         
         if(velocity > 0.05) {
-            if(parabolaArc) {;
-                parabolaArc();
-            } 
-            else {
                 if(falling) {
                     fall();
             } 
                 else {
                     bounce();
                 }
-            }
+            
         }
 
     }
@@ -66,46 +63,27 @@ public class Ball {
         // if it is above the screenHeight fall
         if(y < screenHeight - (radius*2)) {
             
-            
-            if(continousFallingAccelerator > 1) {
-                velocity = velocity * 1.058;
-            }
-            
+            // Accelerate as it falls 
+            velocity = velocity * 1.06;
             y+=velocity;
-            continousFallingAccelerator++;
         }
         // if there contact with ground and there is velocity, change to bounce
         if(y >= screenHeight - (radius*2) && velocity > 0) {
             falling = false;
-            parabolaArc = true;
-            velocity = velocity * 0.8;
-            initialY = initialY * 1.2;
-            continousFallingAccelerator = 0;
+            velocity = velocity * 0.6;
         }
     }
-        
-    public void parabolaArc() {
+ 
+    
+    public void bounce() {
+        // basically reduce the velocity until it is 0.82
+        // it is so slow pretty
         if(velocity > 0.82) {
             velocity = velocity * 0.95;
             y-=velocity;
         }
         if(velocity <= 0.82) {
-            parabolaArc = false;
             falling = true;
-        }
-    }
-    
-    public void bounce() {
-        // it will only reach up to the initialY 
-        if(y>initialY) {
-            y-=velocity;
-            velocity = velocity * 0.98;
-        }
-        // if it reaches the initialY it will lose momentum and fall again
-        if(y<=initialY) {
-            falling = true;
-            velocity = velocity * 0.8;
-            
         }
     }
     
